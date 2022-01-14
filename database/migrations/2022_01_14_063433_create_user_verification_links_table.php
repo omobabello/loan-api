@@ -30,6 +30,7 @@ class CreateUserVerificationLinksTable extends Migration
      */
     public function down()
     {
+        Schema::dropForeign(['user_id']);
         Schema::dropIfExists('user_verification_links');
     }
 }
