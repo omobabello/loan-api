@@ -15,10 +15,9 @@ class CreateUserVerificationLinksTable extends Migration
     {
         Schema::create('user_verification_links', function (Blueprint $table) {
             $table->id();
-            $table->uuid('user_id'); 
+            $table->foreignUuid('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->string('verification_hash'); 
             $table->boolean('status');
-            $table->foreignUuid('id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
