@@ -3,6 +3,10 @@
 return [
     'internal-server-error' => "Internal server error occured",
     'validation-error' => "Validation error",
-    'record-created' => "Record successfully created",
-    'resource-not-found' => "Resource not found"
+    'resource-not-found' => "Resource not found",
+    'login-successful' => 'User successfully signed in',
+    'logout-successful' => 'User successfully signed out',
+    'record-created' => 'Record created successfully',
+    'records-fetched' => 'Records fetched successfully',
+    'record-fetched' => 'Record fetched successfully',
 ];

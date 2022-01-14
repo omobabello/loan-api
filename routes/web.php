@@ -18,5 +18,6 @@
 // });
 
 $router->get('/', 'ExampleController@index');
+$router->get('/login', 'UserController@login');
 $router->post('users', 'UserController@store');
 $router->get('/users/{id}/confirm/{hash}', 'UserController@confirm');

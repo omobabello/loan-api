@@ -9,7 +9,9 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Lumen\Auth\Authorizable;
 
-class User extends BaseModel implements AuthenticatableContract, AuthorizableContract
+use Tymon\JWTAuth\Contracts\JWTSubject;
+
+class User extends BaseModel implements AuthenticatableContract, AuthorizableContract, JWTSubject
 {
     use Authenticatable, Authorizable, CustomIdentifier;
 
@@ -23,7 +25,7 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         'email_confirmed',
         'password',
         'account_type',
-        'phone', 
+        'phone',
         'address'
     ];
 
@@ -35,5 +37,15 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     public function setAccountTypeAttribute($value)
     {
         $this->attributes['account_type'] = strtolower($value);
+    }
+
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims()
+    {
+        return [];
     }
 }

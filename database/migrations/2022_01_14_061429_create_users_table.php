@@ -21,7 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('phone', 15)->unique(); 
             $table->text('address');
             $table->string('password');
-            $table->boolean('email_confirmed'); 
+            $table->boolean('email_confirmed');
             $table->string('account_type', 10);
             $table->timestamps();
         });

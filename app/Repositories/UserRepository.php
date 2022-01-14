@@ -6,10 +6,11 @@ use App\Mail\UserRegisteredMail;
 use App\Models\User;
 use App\Models\UserVerification;
 use App\Repositories\Contracts\UserRepositoryInterface;
-
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -49,5 +50,19 @@ class UserRepository implements UserRepositoryInterface
         $verification->status = true;
         $verification->save();
         return true;
+    }
+
+    public function login(Request $request)
+    {
+        $token = Auth::attempt($request->only('email', 'password'));
+        if (!$token) {
+            throw new AuthenticationException();
+        }
+        return [
+            'user' => Auth::user(),
+            'token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => Auth::factory()->getTTL() * 60
+        ];
     }
 }
