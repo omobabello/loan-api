@@ -29,7 +29,8 @@ class CreateUserVerificationLinksTable extends Migration
      */
     public function down()
     {
-        Schema::dropForeign(['user_id']);
-        Schema::dropIfExists('user_verification_links');
+        Schema::dropIfExists('user_verification_links', function(Blueprint $table){
+            $table->dropForeign(['user_id']);
+        });
     }
 }

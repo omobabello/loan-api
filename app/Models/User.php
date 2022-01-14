@@ -14,6 +14,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 {
     use Authenticatable, Authorizable, HasFactory, CustomIdentifier;
 
+    const BORROWER = 'borrower'; 
+    const LENDER = 'lender';
+
     /**
      * The attributes that are mass assignable.
      *

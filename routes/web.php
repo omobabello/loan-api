@@ -18,3 +18,4 @@
 // });
 
 $router->get('/', 'ExampleController@index');
+$router->post('users', 'UserController@store');

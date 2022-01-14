@@ -17,8 +17,8 @@ class CreateUsersTable extends Migration
             $table->uuid('id')->primary();
             $table->string('first_name'); 
             $table->string('last_name'); 
-            $table->string('email');
-            $table->string('phone', 15); 
+            $table->string('email')->unique();
+            $table->string('phone', 15)->unique(); 
             $table->text('address');
             $table->string('password');
             $table->boolean('email_confirmed'); 
