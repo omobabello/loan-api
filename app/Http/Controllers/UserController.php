@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Repositories\Contracts\UserRepositoryInterface;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -11,6 +12,13 @@ use Illuminate\Validation\ValidationException;
 class UserController extends Controller
 {
     //
+
+    private $userRepository;
+
+    public function __construct(UserRepositoryInterface $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
 
     public function store(Request $request)
     {
@@ -26,17 +34,13 @@ class UserController extends Controller
                 'address' => 'required'
             ]);
 
-            return $this->response(Response::HTTP_OK, 'Good', ['bednt']);
+            $user = $this->userRepository->register($request);
+            return $this->response(Response::HTTP_OK, __('messages.record-created'), $user);
         } catch (ValidationException $err) {
             return $this->validationErrorResponse($err->errors());
         } catch (Exception $err) {
             Log::error($err->getMessage(), $err->getTrace());
             return $this->serverErrorResonse();
         }
-    }
-
-    private function validateAccountType()
-    {
-        return false;
     }
 }

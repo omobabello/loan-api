@@ -17,6 +17,7 @@ class CreateUserVerificationLinksTable extends Migration
             $table->id();
             $table->foreignUuid('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
             $table->string('verification_hash'); 
+            $table->dateTime('expiry');
             $table->boolean('status');
             $table->timestamps();
         });
