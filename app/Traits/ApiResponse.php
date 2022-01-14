@@ -14,10 +14,10 @@ trait ApiResponse
         ], $status);
     }
 
-    public function error($status, $errors)
+    public function error($status, $message, $errors = null)
     {
         return response()->json([
-            'message' => __('messages.validation_error'),
+            'message' => $message,
             'errors' => $errors
         ], $status);
     }

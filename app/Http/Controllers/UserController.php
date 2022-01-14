@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\UserRegisteredMail;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -57,9 +58,9 @@ class UserController extends Controller
         try {
             $hasConfirmed = $this->userRepository->confirmUser($id, $hash);
             return $this->response(Response::HTTP_OK, __('messages.record-created'), $hasConfirmed);
-        } catch (NotFoundResourceException $err) {
+        } catch (NotFoundResourceException | ModelNotFoundException $err) {
             return $this->error(Response::HTTP_NOT_FOUND, __('messages.resource-not-found'));
-        } catch (Exception $err) {
+        }catch (Exception $err) {
             Log::error($err->getMessage(), $err->getTrace());
             return $this->serverError();
         }
