@@ -14,7 +14,15 @@ trait ApiResponse
         ], $status);
     }
 
-    public function validationErrorResponse($errors)
+    public function error($status, $errors)
+    {
+        return response()->json([
+            'message' => __('messages.validation_error'),
+            'errors' => $errors
+        ], $status);
+    }
+
+    public function validationError($errors)
     {
         return response()->json([
             'message' => __('messages.validation_error'),
@@ -22,7 +30,7 @@ trait ApiResponse
         ], Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function serverErrorResonse()
+    public function serverError()
     {
         return response()->json([
             'message' => __('messages.internal-server-error'),

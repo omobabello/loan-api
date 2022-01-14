@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Repositories;
 
@@ -9,18 +9,19 @@ use App\Repositories\Contracts\UserRepositoryInterface;
 
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class UserRepository implements UserRepositoryInterface {
+class UserRepository implements UserRepositoryInterface
+{
 
     public function register(Request $request)
     {
         $data = $request->all();
         $data['email_confirmed'] = false;
         $user = User::create($data);
-        $this->createUserVerificationLink($user);
         return $user;
     }
 
@@ -33,10 +34,20 @@ class UserRepository implements UserRepositoryInterface {
             'status' => false,
         ));
 
-        Mail::queue(new UserRegisteredMail($user->email, $user->first_name, env('APP_URL')."/user/$verification->user_id/confirm/$verification->verification_hash"));
+        return $verification;
+    }
 
-        // Mail::queue();
-
-        Log::info("Verification Link : ".env('APP_URL')."/$verification->user_id/$verification->verification_hash");
+    public function confirmUser($userId, $hash)
+    {
+        $user = User::findOrFail($userId);
+        $verification = UserVerification::where('verification_hash', $hash)->firstOrFail();
+        if (strtotime('now') > strtotime($verification->expiry)) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+        $user->email_confirmed = true;
+        $user->save();
+        $verification->status = true;
+        $verification->save();
+        return true;
     }
 }

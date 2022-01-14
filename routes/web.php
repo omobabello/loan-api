@@ -19,3 +19,4 @@
 
 $router->get('/', 'ExampleController@index');
 $router->post('users', 'UserController@store');
+$router->get('/users/{id}/confirm/{hash}', 'UserController@confirm');
