@@ -11,7 +11,11 @@ class ExampleController extends Controller
      */
     public function __construct()
     {
-        //
+    
+    }
+
+    public function index(){
+       return $this->response(200, 'Good start', ['good boy']);
     }
 
     //
