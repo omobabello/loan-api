@@ -38,7 +38,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->post('wallets/withdraw', 'WalletController@withdraw');
         $router->get('wallets', 'WalletController@index'); 
         $router->get('wallets/activities', 'WalletController@activities');
-        
-        $router->post('loans/request', 'LoanController@createRequest');
+
+        $router->post('loans/requests', 'LoanController@createRequest');
     });
 });

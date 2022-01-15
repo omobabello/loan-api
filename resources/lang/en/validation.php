@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'after' => 'The :attribute must be a date after :date.',
+    'date' => 'The :attribute is not a valid date.',
+    'date_equals' => 'The :attribute must be a date equal to :date.',
+    'date_format' => 'The :attribute does not match the format :format.',
     'max' => [
         'numeric' => 'The :attribute may not be greater than :max.',
         'file' => 'The :attribute may not be greater than :max kilobytes.',

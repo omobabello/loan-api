@@ -2,11 +2,11 @@
 
 namespace App\Models;
 
-use App\Traits\ApiResponse;
+use App\Models\Traits\CustomIdentifier;
 
 class LoanRequest extends BaseModel
 {
-    use ApiResponse; 
+    use CustomIdentifier;
 
     public $incrementing = false;
 }

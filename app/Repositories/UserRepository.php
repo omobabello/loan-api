@@ -58,6 +58,9 @@ class UserRepository implements UserRepositoryInterface
         if (!$token) {
             throw new AuthenticationException();
         }
+
+        // Can implement logic for if the user is not confirmed yet. 
+        // But we'd let them go for now. 
         return [
             'user' => Auth::user(),
             'token' => $token,

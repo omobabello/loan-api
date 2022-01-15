@@ -6,5 +6,5 @@ use Illuminate\Http\Request;
 
 interface LoanRepositoryInterface
 {
-    public function makeRequest(Request $request);
+    public function makeRequest(Request $request, $userId);
 }

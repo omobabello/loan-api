@@ -51,8 +51,6 @@ class UserController extends Controller
         try {
             Auth::logout();
             return $this->response(Response::HTTP_OK, __('messages.logout-successful'));
-        } catch (AuthenticationException $e) {
-            return $this->authenticationError();
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
             return $this->serverError();
