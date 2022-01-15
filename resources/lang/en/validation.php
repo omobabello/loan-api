@@ -21,5 +21,6 @@ return [
     'numeric' => 'The :attribute must be a number.',
     'phone' => 'The :attribute provided is not in acceped format',
     'required' => 'The :attribute field is required',
+    'string' => 'The :attribute must be a string.',
     'unique' => 'The :attribute has already been taken.',
 ];
