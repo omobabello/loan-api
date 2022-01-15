@@ -58,6 +58,11 @@ $app->singleton(
     App\Repositories\WalletRepository::class
 );
 
+
+$app->singleton(
+    App\Repositories\Contracts\LoanRepositoryInterface::class,
+    App\Repositories\LoanRepository::class
+);
 /*
 |--------------------------------------------------------------------------
 | Register Config Files
