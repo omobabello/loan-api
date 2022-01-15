@@ -29,6 +29,10 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
         'address'
     ];
 
+    protected $hidden = [
+        'password',
+    ];
+
     public function setPasswordAttribute($value)
     {
         $this->attributes['password'] = Hash::make($value);
