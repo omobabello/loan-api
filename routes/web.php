@@ -40,5 +40,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('wallets/activities', 'WalletController@activities');
 
         $router->post('loans/requests', 'LoanController@createRequest');
+        $router->get('loans/requests', 'LoanController@getUserRequests');
+        $router->get('loans/requests/all', 'LoanController@getAllRequests');
     });
 });

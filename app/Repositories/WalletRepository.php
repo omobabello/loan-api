@@ -25,6 +25,8 @@ class WalletRepository implements WalletRepositoryInterface
             $wallet->save();
         }
 
+        //fire up event(s) if required in the future.
+
         return $wallet;
     }
 
@@ -35,6 +37,8 @@ class WalletRepository implements WalletRepositoryInterface
             $wallet->balance += $amount;
             $wallet->save();
         }
+
+        // fire up event(s) if required in the future.
 
         return $wallet;
     }

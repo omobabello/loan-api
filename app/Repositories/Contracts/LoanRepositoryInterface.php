@@ -7,4 +7,8 @@ use Illuminate\Http\Request;
 interface LoanRepositoryInterface
 {
     public function makeRequest(Request $request, $userId);
+
+    public function getUserRequests($userId); 
+
+    public function getAllRequests();
 }

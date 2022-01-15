@@ -32,10 +32,31 @@ class LoanController extends Controller
 
             $loanRequest = $this->loanRepository->makeRequest($request, Auth::id());
 
-            return $this->response(Response::HTTP_OK, __('messages.record-created'), $loanRequest);
-
+            return $this->response(Response::HTTP_CREATED, __('messages.record-created'), $loanRequest);
         } catch (ValidationException $err) {
             return $this->validationError($err->errors());
+        } catch (Exception $e) {
+            Log::error($e->getMessage(), $e->getTrace());
+            return $this->serverError();
+        }
+    }
+
+    public function getUserRequests(Request $request)
+    {
+        try {
+            $loanRequests = $this->loanRepository->getUserRequests(Auth::id());
+            return $this->response(Response::HTTP_OK, __('messages.records-fetched'), $loanRequests);
+        } catch (Exception $e) {
+            Log::error($e->getMessage(), $e->getTrace());
+            return $this->serverError();
+        }
+    }
+
+    public function getAllRequests(Request $request)
+    {
+        try {
+            $loanRequests = $this->loanRepository->getAllRequests(Auth::id());
+            return $this->response(Response::HTTP_OK, __('messages.records-fetched'), $loanRequests);
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
             return $this->serverError();

@@ -14,4 +14,14 @@ class LoanRepository implements LoanRepositoryInterface
         $data['user_id'] = $userId;
         return LoanRequest::create($data);
     }
+
+    public function getUserRequests($userId)
+    {
+        return LoanRequest::where('user_id', $userId)->simplePaginate(10);
+    }
+
+    public function getAllRequests()
+    {
+        return LoanRequest::simplePaginate(10);
+    }
 }
