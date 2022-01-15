@@ -1,8 +1,5 @@
 <?php
 
-use App\Repositories\Contracts\UserRepositoryInterface;
-use App\Repositories\UserRepository;
-
 require_once __DIR__ . '/../vendor/autoload.php';
 
 (new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
@@ -52,8 +49,13 @@ $app->singleton(
 );
 
 $app->singleton(
-    UserRepositoryInterface::class,
-    UserRepository::class
+    App\Repositories\Contracts\UserRepositoryInterface::class,
+    App\Repositories\UserRepository::class
+);
+
+$app->singleton(
+    App\Repositories\Contracts\WalletRepositoryInterface::class,
+    App\Repositories\WalletRepository::class
 );
 
 /*

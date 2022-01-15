@@ -39,7 +39,7 @@ class UserController extends Controller
         } catch (ValidationException $err) {
             return $this->validationError($err->errors());
         } catch (AuthenticationException $e) {
-            return $this->error(Response::HTTP_UNAUTHORIZED, "Authentication Failed", "Invalid email/password provided");
+            return $this->authenticationError('Invalid email / password');
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
             return $this->serverError();
@@ -52,7 +52,7 @@ class UserController extends Controller
             Auth::logout();
             return $this->response(Response::HTTP_OK, __('messages.logout-successful'));
         } catch (AuthenticationException $e) {
-            return $this->error(Response::HTTP_UNAUTHORIZED, "Authentication Failed");
+            return $this->authenticationError();
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
             return $this->serverError();

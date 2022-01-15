@@ -9,5 +9,6 @@ return [
     'record-created' => 'Record created successfully',
     'records-fetched' => 'Records fetched successfully',
     'record-fetched' => 'Record fetched successfully',
-    'unauthorized' => 'Unauthorized entry'
+    'record-updated' => 'Record Updated successfully',
+    'unauthorized' => 'Authentication Failed'
 ];

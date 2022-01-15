@@ -22,8 +22,8 @@ trait ApiResponse
         ], $status);
     }
 
-    public function authenticationError($message = 'Invalid email / password'){
-        return $this->error(Response::HTTP_UNAUTHORIZED, $message);
+    public function authenticationError($message = null){
+        return $this->error(Response::HTTP_UNAUTHORIZED, __('messages.unauthorized'), $message);
     }
 
     public function validationError($errors)

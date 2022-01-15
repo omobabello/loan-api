@@ -18,6 +18,8 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     const BORROWER = 'borrower';
     const LENDER = 'lender';
 
+    public $incrementing = false;
+
     protected $fillable = [
         'first_name',
         'last_name',

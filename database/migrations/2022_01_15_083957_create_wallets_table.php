@@ -15,8 +15,8 @@ class CreateWalletsTable extends Migration
     {
         Schema::create('wallets', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->constrained('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->double('balance');
+            $table->foreignUuid('user_id')->unique()->constrained('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->double('balance')->default(0);
             $table->timestamps();
         });
     }

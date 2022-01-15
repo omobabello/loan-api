@@ -14,6 +14,7 @@ return [
         'array' => 'The :attribute must have at least :min items.',
     ],
     'name' => 'The :attribute provided is not in accepted format',
+    'numeric' => 'The :attribute must be a number.',
     'phone' => 'The :attribute provided is not in acceped format',
     'required' => 'The :attribute field is required',
     'unique' => 'The :attribute has already been taken.',

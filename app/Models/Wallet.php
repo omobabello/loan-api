@@ -7,4 +7,7 @@ use App\Models\Traits\CustomIdentifier;
 class Wallet extends BaseModel
 {
     use CustomIdentifier;
+
+    public $incrementing = false;
+
 }

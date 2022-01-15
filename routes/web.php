@@ -31,4 +31,12 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('refresh', 'UserController@refresh');
         $router->get('logout', 'UserController@logout');
     });
+
+    $router->group(['middleware' => ['throttle:10,1', 'auth']], function () use ($router) {
+        $router->post('wallets', 'WalletController@create');
+        $router->post('wallets/topup', 'WalletController@topup');
+        $router->post('wallets/withdraw', 'WalletController@withdraw');
+        $router->get('wallets', 'WalletController@index'); 
+        $router->get('wallets/activities', 'WalletController@activities');
+    });
 });
