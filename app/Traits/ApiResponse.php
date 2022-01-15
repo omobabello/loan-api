@@ -22,18 +22,17 @@ trait ApiResponse
         ], $status);
     }
 
+    public function authenticationError($message = 'Invalid email / password'){
+        return $this->error(Response::HTTP_UNAUTHORIZED, $message);
+    }
+
     public function validationError($errors)
     {
-        return response()->json([
-            'message' => __('messages.validation_error'),
-            'errors' => $errors
-        ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        return $this->error(Response::HTTP_UNPROCESSABLE_ENTITY, __('messages.validation_error'), $errors);
     }
 
     public function serverError()
     {
-        return response()->json([
-            'message' => __('messages.internal-server-error'),
-        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        return $this->error(Response::HTTP_INTERNAL_SERVER_ERROR, __('messages.internal-server-error'));
     }
 }

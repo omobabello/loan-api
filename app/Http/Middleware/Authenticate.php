@@ -2,17 +2,26 @@
 
 namespace App\Http\Middleware;
 
+use App\Traits\ApiResponse;
 use Closure;
+use Illuminate\Auth\Middleware\Authenticate as MiddlewareAuthenticate;
 use Illuminate\Contracts\Auth\Factory as Auth;
+use Illuminate\Support\Facades\Log;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
-class Authenticate
+class Authenticate 
 {
+    use ApiResponse;
     /**
      * The authentication guard factory instance.
      *
      * @var \Illuminate\Contracts\Auth\Factory
      */
     protected $auth;
+    protected $jwtAuth;
 
     /**
      * Create a new middleware instance.
@@ -20,9 +29,10 @@ class Authenticate
      * @param  \Illuminate\Contracts\Auth\Factory  $auth
      * @return void
      */
-    public function __construct(Auth $auth)
+    public function __construct(Auth $auth, JWTAuth $jwtAuth)
     {
         $this->auth = $auth;
+        $this->jwtAuth = $jwtAuth;
     }
 
     /**
@@ -35,10 +45,11 @@ class Authenticate
      */
     public function handle($request, Closure $next, $guard = null)
     {
-        if ($this->auth->guard($guard)->guest()) {
-            return response('Unauthorized.', 401);
+        try {
+            $this->jwtAuth::parseToken()->authenticate();
+            return $next($request);
+        } catch (TokenExpiredException | TokenInvalidException | JWTException $e) {
+            return $this->authenticationError($e->getMessage());
         }
-
-        return $next($request);
     }
 }

@@ -108,6 +108,10 @@ $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
 ]);
 
+$app->routeMiddleware([
+    'throttle' => App\Http\Middleware\ThrottleRequests::class,
+]);
+
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers

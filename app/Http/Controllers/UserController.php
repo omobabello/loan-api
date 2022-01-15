@@ -72,15 +72,13 @@ class UserController extends Controller
                 'expires_in' => Auth::factory()->getTTL() * 60
             ];
             return $this->response(Response::HTTP_OK, __('messages.record-fetched'), $token);
-        } catch (AuthenticationException $e) {
-            return $this->error(Response::HTTP_UNAUTHORIZED, "Authentication Failed");
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
             return $this->serverError();
         }
     }
 
-    public function store(Request $request)
+    public function register(Request $request)
     {
         try {
             $this->validate($request, [

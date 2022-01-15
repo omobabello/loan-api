@@ -18,6 +18,17 @@
 // });
 
 $router->get('/', 'ExampleController@index');
-$router->get('/login', 'UserController@login');
-$router->post('users', 'UserController@store');
-$router->get('/users/{id}/confirm/{hash}', 'UserController@confirm');
+
+$router->group(['prefix' => 'api'], function () use ($router) {
+
+    $router->group(['middleware' => 'throttle:5'], function () use ($router) {
+        $router->get('login', 'UserController@login');
+        $router->post('register', 'UserController@register');
+        $router->get('users/{id}/confirm/{hash}', 'UserController@confirm');
+    });
+
+    $router->group(['middleware' => ['throttle:1,1', 'auth']], function () use ($router) {
+        $router->get('refresh', 'UserController@refresh');
+        $router->get('logout', 'UserController@logout');
+    });
+});
