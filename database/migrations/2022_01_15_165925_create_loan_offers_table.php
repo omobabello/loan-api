@@ -16,7 +16,7 @@ class CreateLoanOffersTable extends Migration
         Schema::create('loan_offers', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('user_id')->unique()->constrained('users')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreignUuid('loan_id')->unique()->constrained('loan_requests')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreignUuid('loan_request_id')->constrained('loan_requests')->onUpdate('cascade')->onDelete('cascade');
             $table->double('interest_rate');
             $table->date('maturity_date');
             $table->text('terms');

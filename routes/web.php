@@ -13,12 +13,6 @@
 |
 */
 
-// $router->get('/', function () use ($router) {
-//     return $router->app->version();
-// });
-
-$router->get('/', 'ExampleController@index');
-
 $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->group(['middleware' => 'throttle:5'], function () use ($router) {
@@ -45,7 +39,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
 
         $router->post('loans/requests/{id}/offers', 'LoanController@makeOffer');
         $router->get('loans/requests/{id}/offers', 'LoanController@getOffers');
-        $router->put('loans/requests/{loanId}/offers/{offerId}/accept', 'LoanController@acceptOffer');
-        $router->put('loans/requests/{loanId}/offers/{offerId}/decline', 'LoanController@declineOffer');
+        $router->post('loans/offers/{offerId}/accept', 'LoanController@acceptOffer');
+        $router->post('loans/offers/{offerId}/decline', 'LoanController@declineOffer');
     });
 });

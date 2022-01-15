@@ -11,6 +11,6 @@ class LoanRequest extends BaseModel
     public $incrementing = false;
 
     public function offers(){
-        return $this->hasMany(\App\Models\LoanOffers::class, 'loan_id');
+        return $this->hasMany(\App\Models\LoanOffer::class, 'loan_request_id');
     }
 }

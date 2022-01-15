@@ -2,7 +2,9 @@
 
 namespace App\Repositories;
 
-use App\Models\LoanOffers;
+use App\Models\AcceptedOffer;
+use App\Models\DeclinedOffer;
+use App\Models\LoanOffer;
 use App\Models\LoanRequest;
 use App\Repositories\Contracts\LoanRepositoryInterface;
 use Illuminate\Http\Request;
@@ -35,20 +37,33 @@ class LoanRepository implements LoanRepositoryInterface
     {
         $data = $request->all();
         $data['user_id'] = $userId;
-        $data['loan_id'] = $loanId;
-        return LoanOffers::create($data);
+        $data['loan_request_id'] = $loanId;
+        return LoanOffer::create($data);
     }
 
     public function getOffers($loanId)
     {
-        return LoanOffers::where('loan_id', $loanId)->simplePaginate(10);
+        return LoanOffer::where('loan_request_id', $loanId)->simplePaginate(10);
     }
 
-    public function acceptOffer($loanId)
+    public function getOffer($offerId)
     {
+        return LoanOffer::with('request')->findOrFail($offerId);
     }
 
-    public function declineOffer($loanId)
+    public function acceptOffer($offerId)
     {
+        DeclinedOffer::where('loan_offer_id', $offerId)->delete();
+        return AcceptedOffer::create([
+            'loan_offer_id' => $offerId
+        ]);
+    }
+
+    public function declineOffer($offerId)
+    {
+        AcceptedOffer::where('loan_offer_id', $offerId)->delete(); 
+        return DeclinedOffer::create([
+            'loan_offer_id' => $offerId
+        ]);
     }
 }

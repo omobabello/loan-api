@@ -29,6 +29,8 @@ class LoanController extends Controller
     public function makeRequest(Request $request)
     {
         try {
+            $this->validateUserIsBorrower();
+
             $this->validate($request, [
                 'amount' => 'required|numeric|min:1',
                 'proposed_return_date' => 'required|date|after:yesterday|date_format:Y-m-d', //support same day return loan. 
@@ -50,8 +52,12 @@ class LoanController extends Controller
     public function getUserRequests(Request $request)
     {
         try {
+            $this->validateUserIsBorrower();
+
             $loanRequests = $this->loanRepository->getUserRequests(Auth::id());
             return $this->response(Response::HTTP_OK, __('messages.records-fetched'), $loanRequests);
+        } catch (ValidationException $err) {
+            return $this->validationError($err->errors());
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
             return $this->serverError();
@@ -73,7 +79,7 @@ class LoanController extends Controller
     {
         try {
 
-            // $this->validateUserIsLender();
+            $this->validateUserIsLender();
 
             $this->loanRepository->getRequest($id);
 
@@ -100,7 +106,7 @@ class LoanController extends Controller
     {
         try {
 
-            // $this->validateUserIsLender();
+            $this->validateUserIsBorrower();
 
             $loanRequest = $this->loanRepository->getRequest($id);
 
@@ -108,9 +114,51 @@ class LoanController extends Controller
 
             return $this->response(
                 Response::HTTP_CREATED,
-                __('messages.record-created'),
+                __('messages.records-fetched'),
                 ['request' => $loanRequest, 'offers' =>  $loanOffer]
             );
+        } catch (ValidationException $err) {
+            return $this->validationError($err->errors());
+        } catch (NotFoundResourceException | ModelNotFoundException $err) {
+            return $this->error(Response::HTTP_NOT_FOUND, __('messages.resource-not-found'));
+        } catch (Exception $e) {
+            Log::error($e->getMessage(), $e->getTrace());
+            return $this->serverError();
+        }
+    }
+
+    public function acceptOffer(Request $request, $offerId)
+    {
+        try {
+
+            $this->validateUserIsBorrower();
+
+            $loanOffer = $this->loanRepository->getOffer($offerId);
+
+            $this->loanRepository->acceptOffer($offerId);
+
+            return $this->response(Response::HTTP_OK, __('messages.record-updated'), $loanOffer);
+        } catch (ValidationException $err) {
+            return $this->validationError($err->errors());
+        } catch (NotFoundResourceException | ModelNotFoundException $err) {
+            return $this->error(Response::HTTP_NOT_FOUND, __('messages.resource-not-found'));
+        } catch (Exception $e) {
+            Log::error($e->getMessage(), $e->getTrace());
+            return $this->serverError();
+        }
+    }
+
+    public function declineOffer(Request $request, $offerId)
+    {
+        try {
+
+            $this->validateUserIsBorrower();
+
+            $loanOffer = $this->loanRepository->getOffer($offerId);
+
+            $this->loanRepository->declineOffer($offerId);
+
+            return $this->response(Response::HTTP_OK, __('messages.record-updated'), $loanOffer);
         } catch (ValidationException $err) {
             return $this->validationError($err->errors());
         } catch (NotFoundResourceException | ModelNotFoundException $err) {

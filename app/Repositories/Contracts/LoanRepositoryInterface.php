@@ -17,8 +17,10 @@ interface LoanRepositoryInterface
     public function makeOffer(Request $request, $loanId, $userId);
 
     public function getOffers($loanId);
+    
+    public function getOffer($offerId);
 
-    public function acceptOffer($loanId); 
+    public function acceptOffer($offerId); 
 
-    public function declineOffer($loanId);
+    public function declineOffer($offerId);
 }
