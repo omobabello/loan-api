@@ -13,4 +13,8 @@ class LoanController extends Controller
     {
         $this->loanRepository = $loanRepository;
     }
+
+    public function request(Request $request){
+        
+    }
 }

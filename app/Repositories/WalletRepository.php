@@ -23,8 +23,6 @@ class WalletRepository implements WalletRepositoryInterface
         if ($amount > 0) {
             $wallet->balance += $amount;
             $wallet->save();
-
-            $this->recordActivity($wallet->id, $amount, $fromWallet);
         }
 
         return $wallet;
@@ -36,8 +34,6 @@ class WalletRepository implements WalletRepositoryInterface
         if ($amount < 0) {
             $wallet->balance += $amount;
             $wallet->save();
-
-            $this->recordActivity($wallet->id, $amount, $fromWallet);
         }
 
         return $wallet;

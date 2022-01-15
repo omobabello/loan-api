@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
@@ -41,16 +42,22 @@ class WalletController extends Controller
 
             $initialBalance = $request->get('initial_balance');
 
+            DB::beginTransaction();
+
             $wallet = $this->walletRepository->create(Auth::id());
 
             if ($initialBalance) {
                 $wallet = $this->walletRepository->topUp($wallet, $initialBalance);
+                $this->walletRepository->recordActivity($wallet->id, $initialBalance);
             }
+
+            DB::commit();
 
             return $this->response(Response::HTTP_CREATED, __('messages.record-created'), $wallet);
         } catch (ValidationException $err) {
             return $this->validationError($err->errors());
         } catch (Exception $err) {
+            DB::rollBack();
             Log::error($err->getMessage(), $err->getTrace());
             return $this->serverError();
         }
@@ -62,12 +69,19 @@ class WalletController extends Controller
             $this->validate($request, ['amount' => 'required|min:1|max:1000000']);
 
             $wallet = $this->walletRepository->get(Auth::id());
-            $wallet = $this->walletRepository->topUp($wallet, $request->get('amount'));
+            $amount = $request->get('amount');
+
+            DB::beginTransaction();
+            $wallet = $this->walletRepository->topUp($wallet, $amount);
+            $this->walletRepository->recordActivity($wallet->id, $amount);
+
+            DB::commit();
 
             return $this->response(Response::HTTP_CREATED, __('messages.record-updated'), $wallet);
         } catch (ValidationException $err) {
             return $this->validationError($err->errors());
         } catch (Exception $err) {
+            DB::rollBack();
             Log::error($err->getMessage(), $err->getTrace());
             return $this->serverError();
         }
@@ -82,15 +96,21 @@ class WalletController extends Controller
             $wallet = $this->walletRepository->get(Auth::id());
 
             if ($amount > $wallet->balance) {
-                return $this->validationError("Withdrawal request exceeds wallet balance of ". number_format($wallet->balance,2));
+                return $this->validationError("Withdrawal request exceeds wallet balance of " . number_format($wallet->balance, 2));
             }
 
-            $wallet = $this->walletRepository->debit($wallet, $request->get('amount'));
-            return $this->response(Response::HTTP_CREATED, __('messages.record-updated'), $wallet);
+            DB::beginTransaction();
 
+            $wallet = $this->walletRepository->debit($wallet, $request->get('amount'));
+            $this->walletRepository->recordActivity($wallet->id, $amount);
+
+            DB::commit();
+
+            return $this->response(Response::HTTP_CREATED, __('messages.record-updated'), $wallet);
         } catch (ValidationException $err) {
             return $this->validationError($err->errors());
         } catch (Exception $err) {
+            DB::rollBack();
             Log::error($err->getMessage(), $err->getTrace());
             return $this->serverError();
         }
