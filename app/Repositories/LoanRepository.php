@@ -33,14 +33,15 @@ class LoanRepository implements LoanRepositoryInterface
 
     public function makeOffer(Request $request, $loanId, $userId)
     {
-        $data = $request->all(); 
+        $data = $request->all();
         $data['user_id'] = $userId;
-        $data['loan_id'] = $loanId; 
+        $data['loan_id'] = $loanId;
         return LoanOffers::create($data);
     }
 
     public function getOffers($loanId)
     {
+        return LoanOffers::where('loan_id', $loanId)->simplePaginate(10);
     }
 
     public function acceptOffer($loanId)

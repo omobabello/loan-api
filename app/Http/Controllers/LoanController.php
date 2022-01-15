@@ -17,7 +17,7 @@ use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
 class LoanController extends Controller
 {
-    use ApiResponse,UserValidation;
+    use ApiResponse, UserValidation;
 
     private $loanRepository;
 
@@ -86,11 +86,35 @@ class LoanController extends Controller
             $loanOffer = $this->loanRepository->makeOffer($request, $id, Auth::id());
 
             return $this->response(Response::HTTP_CREATED, __('messages.record-created'), $loanOffer);
-
-        } catch (NotFoundResourceException | ModelNotFoundException $err) {
-            return $this->error(Response::HTTP_NOT_FOUND, __('messages.resource-not-found'));
         } catch (ValidationException $err) {
             return $this->validationError($err->errors());
+        } catch (NotFoundResourceException | ModelNotFoundException $err) {
+            return $this->error(Response::HTTP_NOT_FOUND, __('messages.resource-not-found'));
+        } catch (Exception $e) {
+            Log::error($e->getMessage(), $e->getTrace());
+            return $this->serverError();
+        }
+    }
+
+    public function getOffers(Request $request, $id)
+    {
+        try {
+
+            // $this->validateUserIsLender();
+
+            $loanRequest = $this->loanRepository->getRequest($id);
+
+            $loanOffer = $this->loanRepository->getOffers($id);
+
+            return $this->response(
+                Response::HTTP_CREATED,
+                __('messages.record-created'),
+                ['request' => $loanRequest, 'offers' =>  $loanOffer]
+            );
+        } catch (ValidationException $err) {
+            return $this->validationError($err->errors());
+        } catch (NotFoundResourceException | ModelNotFoundException $err) {
+            return $this->error(Response::HTTP_NOT_FOUND, __('messages.resource-not-found'));
         } catch (Exception $e) {
             Log::error($e->getMessage(), $e->getTrace());
             return $this->serverError();
