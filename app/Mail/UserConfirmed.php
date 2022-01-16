@@ -6,13 +6,10 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
-class UserRegisteredMail extends Mailable
+class UserConfirmed extends Mailable
 {
     use Queueable, SerializesModels;
-
-    public $link;
 
     public $username;
 
@@ -23,10 +20,9 @@ class UserRegisteredMail extends Mailable
      *
      * @return void
      */
-    public function __construct($to, $username, $link)
+    public function __construct($to, $username)
     {
         $this->mailTo = $to;
-        $this->link = $link;
         $this->username = $username;
     }
 
@@ -40,6 +36,6 @@ class UserRegisteredMail extends Mailable
         return $this->from("support@54gene.com", "54Gene")
             ->to($this->mailTo)
             ->subject("Welcome to 54 gene")
-            ->view('mails.user_registered');
+            ->view('mails.user_confirmed');
     }
 }

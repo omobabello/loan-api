@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\UserCreatedEvent;
+use App\Mail\UserConfirmed;
 use App\Mail\UserRegisteredMail;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use Exception;
@@ -132,6 +133,10 @@ class UserController extends Controller
     {
         try {
             $hasConfirmed = $this->userRepository->confirmUser($id, $hash);
+            $user = $this->userRepository->getUser($id); 
+
+            Mail::queue(new UserConfirmed($user->email, $user->first_name));
+            
             return $this->response(Response::HTTP_OK, __('messages.record-created'), $hasConfirmed);
         } catch (NotFoundResourceException | ModelNotFoundException $err) {
             return $this->error(Response::HTTP_NOT_FOUND, __('messages.resource-not-found'));

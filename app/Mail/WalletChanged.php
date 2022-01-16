@@ -6,27 +6,27 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
-class UserRegisteredMail extends Mailable
+class WalletChanged extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $link;
-
-    public $username;
-
     protected $mailTo;
+
+    public $amount;
+    public $subjectMatter;
+    public $username;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($to, $username, $link)
+    public function __construct($to, $amount, $username)
     {
+        $this->amount = $amount;
         $this->mailTo = $to;
-        $this->link = $link;
+        $this->subjectMatter = $amount > 0 ? "Wallet Credited" : "Wallet Debited";
         $this->username = $username;
     }
 
@@ -39,7 +39,7 @@ class UserRegisteredMail extends Mailable
     {
         return $this->from("support@54gene.com", "54Gene")
             ->to($this->mailTo)
-            ->subject("Welcome to 54 gene")
-            ->view('mails.user_registered');
+            ->subject($this->subjectMatter)
+            ->view('mails.wallet_changed');
     }
 }

@@ -25,6 +25,7 @@ class WalletRepository implements WalletRepositoryInterface
         $wallet->save();
 
         event(new WalletBalanceAdjustedEvent($wallet, $amount, $fromWallet));
+        return $wallet;
     }
 
     public function recordActivity($walletId, $amount, $fromWalletId = null)
