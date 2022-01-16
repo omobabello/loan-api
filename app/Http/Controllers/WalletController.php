@@ -47,8 +47,7 @@ class WalletController extends Controller
             $wallet = $this->walletRepository->create(Auth::id());
 
             if ($initialBalance) {
-                $wallet = $this->walletRepository->topUp($wallet, $initialBalance);
-                $this->walletRepository->recordActivity($wallet->id, $initialBalance);
+                $wallet = $this->walletRepository->adjustWalletBalance($wallet, $initialBalance);
             }
 
             DB::commit();
@@ -68,20 +67,13 @@ class WalletController extends Controller
         try {
             $this->validate($request, ['amount' => 'required|min:1|max:1000000']);
 
-            $wallet = $this->walletRepository->get(Auth::id());
-            $amount = $request->get('amount');
-
-            DB::beginTransaction();
-            $wallet = $this->walletRepository->topUp($wallet, $amount);
-            $this->walletRepository->recordActivity($wallet->id, $amount);
-
-            DB::commit();
+            $wallet = $this->walletRepository->create(Auth::id());
+            $wallet = $this->walletRepository->adjustWalletBalance($wallet, $request->get('amount'));
 
             return $this->response(Response::HTTP_CREATED, __('messages.record-updated'), $wallet);
         } catch (ValidationException $err) {
             return $this->validationError($err->errors());
         } catch (Exception $err) {
-            DB::rollBack();
             Log::error($err->getMessage(), $err->getTrace());
             return $this->serverError();
         }
@@ -99,12 +91,7 @@ class WalletController extends Controller
                 return $this->validationError("Withdrawal request exceeds wallet balance of " . number_format($wallet->balance, 2));
             }
 
-            DB::beginTransaction();
-
-            $wallet = $this->walletRepository->debit($wallet, $request->get('amount'));
-            $this->walletRepository->recordActivity($wallet->id, $amount);
-
-            DB::commit();
+            $wallet = $this->walletRepository->adjustWalletBalance($wallet, $request->get('amount') * -1);
 
             return $this->response(Response::HTTP_CREATED, __('messages.record-updated'), $wallet);
         } catch (ValidationException $err) {

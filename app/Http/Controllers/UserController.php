@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UserCreatedEvent;
 use App\Mail\UserRegisteredMail;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use Exception;
@@ -113,13 +114,10 @@ class UserController extends Controller
                 'address' => 'required'
             ]);
 
-            DB::beginTransaction();
-
             $user = $this->userRepository->register($request);
-            $verification = $this->userRepository->createUserVerificationLink($user);
 
-            DB::commit();
-            // Mail::queue(new UserRegisteredMail($user->email, $user->first_name, env('APP_URL') . "/user/$verification->user_id/confirm/$verification->verification_hash"));
+            event(new UserCreatedEvent($user));
+           
             return $this->response(Response::HTTP_CREATED, __('messages.record-created'), $user);
         } catch (ValidationException $err) {
             return $this->validationError($err->errors());

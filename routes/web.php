@@ -2,6 +2,9 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use App\Models\LoanRequest;
+use App\Repositories\WalletRepository;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -13,10 +16,15 @@
 |
 */
 
+$router->get('check/{id}', function ($id){
+    $loan = LoanRequest::with('acceptedOffers')->findOrFail($id); 
+    return $loan; 
+});
+
 $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->group(['middleware' => 'throttle:5'], function () use ($router) {
-        $router->get('login', 'UserController@login');
+        $router->post('login', 'UserController@login');
         $router->post('register', 'UserController@register');
         $router->get('users', 'UserController@index');
         $router->get('users/{id}', 'UserController@show');

@@ -11,9 +11,7 @@ interface WalletRepositoryInterface
 
     public function get($userId);
 
-    public function topUp(Wallet $wallet, $amount, $fromWallet = null);
+    public function adjustWalletBalance(Wallet $wallet, $amount, Wallet $fromWallet = null);
 
-    public function debit(Wallet $wallet, $amount, $fromWallet = null);
-
-    public function recordActivity($walletId, $amount, $fromWallet = null);
+    public function recordActivity($walletId, $amount, $fromWalletId = null);
 }

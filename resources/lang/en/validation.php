@@ -2,6 +2,7 @@
 
 return [
     'after' => 'The :attribute must be a date after :date.',
+    'after_or_equal' => 'The :attribute must be a date after or equal to :date.',
     'date' => 'The :attribute is not a valid date.',
     'date_equals' => 'The :attribute must be a date equal to :date.',
     'date_format' => 'The :attribute does not match the format :format.',

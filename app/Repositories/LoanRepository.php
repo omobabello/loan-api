@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Events\LoanOfferAcceptedEvent;
 use App\Models\AcceptedOffer;
 use App\Models\DeclinedOffer;
 use App\Models\LoanOffer;
@@ -53,15 +54,20 @@ class LoanRepository implements LoanRepositoryInterface
 
     public function acceptOffer($offerId)
     {
+
         DeclinedOffer::where('loan_offer_id', $offerId)->delete();
-        return AcceptedOffer::create([
+        
+        $acceptedOffer =  AcceptedOffer::create([
             'loan_offer_id' => $offerId
         ]);
+
+        event(new LoanOfferAcceptedEvent($this->getOffer($offerId)));
+        return $acceptedOffer;
     }
 
     public function declineOffer($offerId)
     {
-        AcceptedOffer::where('loan_offer_id', $offerId)->delete(); 
+        AcceptedOffer::where('loan_offer_id', $offerId)->delete();
         return DeclinedOffer::create([
             'loan_offer_id' => $offerId
         ]);

@@ -28,7 +28,7 @@ trait ApiResponse
 
     public function validationError($errors)
     {
-        return $this->error(Response::HTTP_UNPROCESSABLE_ENTITY, __('messages.validation_error'), $errors);
+        return $this->error(Response::HTTP_UNPROCESSABLE_ENTITY, __('messages.validation-error'), $errors);
     }
 
     public function serverError()
