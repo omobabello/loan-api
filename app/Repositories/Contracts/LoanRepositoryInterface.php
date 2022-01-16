@@ -13,6 +13,8 @@ interface LoanRepositoryInterface
     public function getAllRequests();
 
     public function getRequest($requestId);
+    
+    public function getRequestWithOffers($requestId);
 
     public function makeOffer(Request $request, $loanId, $userId);
 

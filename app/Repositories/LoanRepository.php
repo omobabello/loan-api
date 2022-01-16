@@ -34,6 +34,10 @@ class LoanRepository implements LoanRepositoryInterface
         return LoanRequest::findOrFail($requestId);
     }
 
+    public function getRequestWithOffers($requestId){
+        return LoanRequest::with('offers')->findOrFail($requestId);
+    }
+
     public function makeOffer(Request $request, $loanId, $userId)
     {
         $data = $request->all();
@@ -67,7 +71,6 @@ class LoanRepository implements LoanRepositoryInterface
 
     public function declineOffer($offerId)
     {
-        AcceptedOffer::where('loan_offer_id', $offerId)->delete();
         return DeclinedOffer::create([
             'loan_offer_id' => $offerId
         ]);

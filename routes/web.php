@@ -3,6 +3,7 @@
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 use App\Models\LoanRequest;
+use App\Models\User;
 use App\Repositories\WalletRepository;
 
 /*
@@ -17,8 +18,12 @@ use App\Repositories\WalletRepository;
 */
 
 $router->get('check/{id}', function ($id){
-    $loan = LoanRequest::with('acceptedOffers')->findOrFail($id); 
-    return $loan; 
+    $user = User::findOrFail($id); 
+    $user->account_type = User::BORROWER; 
+    $user->save();
+    return $user;
+    // $loan = LoanRequest::with('acceptedOffers')->findOrFail($id); 
+    // return $loan;
 });
 
 $router->group(['prefix' => 'api'], function () use ($router) {

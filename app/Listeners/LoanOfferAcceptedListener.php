@@ -26,13 +26,6 @@ class LoanOfferAcceptedListener
     public function handle(LoanOfferAcceptedEvent $event)
     {
         $loanOffer = $event->loanOffer;
-        // $loanRequest = $loanOffer->request()->get();
-
-        Log::info($loanOffer); 
-        // Log::info($loanRequest);
-
-        Log::info($loanOffer->request->user_id);
-        Log::info($loanOffer->user_id);
         
         $borrowerWallet = $this->walletRepository->get($loanOffer->request->user_id);
         $lenderWallet = $this->walletRepository->get($loanOffer->user_id);

@@ -90,7 +90,7 @@ class LoanController extends Controller
             $this->validateUserIsLender();
 
             $loanRequest =  $this->loanRepository->getRequest($id);
-            $walletRepository = app(WalletRepositoryInterface::class); 
+            $walletRepository = app(WalletRepositoryInterface::class);
             $lenderWallet = $walletRepository->get(Auth::id());
 
             $dateAfterOrEqual = date('Y-m-d', strtotime($loanRequest->created_at));
@@ -101,7 +101,7 @@ class LoanController extends Controller
                 'terms' => 'required|string'
             ]);
 
-            if($lenderWallet->balance < $loanRequest->amount){
+            if ($lenderWallet->balance < $loanRequest->amount) {
                 return $this->validationError("Your wallet can't fund this loan");
             }
 
@@ -126,15 +126,9 @@ class LoanController extends Controller
 
             $this->validateUserIsBorrower();
 
-            $loanRequest = $this->loanRepository->getRequest($id);
+            $loanRequest = $this->loanRepository->getRequestWithOffers($id);
 
-            $loanOffer = $this->loanRepository->getOffers($id);
-
-            return $this->response(
-                Response::HTTP_CREATED,
-                __('messages.records-fetched'),
-                ['request' => $loanRequest, 'offers' =>  $loanOffer]
-            );
+            return $this->response(Response::HTTP_CREATED, __('messages.records-fetched'), $loanRequest);
         } catch (AuthorizationException $e) {
             return $this->error(Response::HTTP_FORBIDDEN, $e->getMessage());
         } catch (NotFoundResourceException | ModelNotFoundException $err) {
@@ -153,14 +147,18 @@ class LoanController extends Controller
 
             $loanOffer = $this->loanRepository->getOffer($offerId);
 
-            if ($loanOffer->accepted()->count() > 0 || $loanOffer->request()->acceptOffer()->count > 0) {
+            $loanRequest = $loanOffer->request()->first(); 
+
+            Log::info($loanRequest);
+
+            if ($loanOffer->accepted()->count() > 0 || $loanRequest->acceptedOffers()->count() > 0) {
                 return $this->error(Response::HTTP_FORBIDDEN, "This request has been previously accepted", $loanOffer->accepted());
             }
 
-            $walletRepository = app(WalletRepositoryInterface::class); 
-            $lenderWallet = $walletRepository->get($loanOffer->user_id); 
+            $walletRepository = app(WalletRepositoryInterface::class);
+            $lenderWallet = $walletRepository->get($loanOffer->user_id);
 
-            if($lenderWallet->balance < $loanOffer->request->amount){
+            if ($lenderWallet->balance < $loanOffer->request->amount) {
                 return $this->error(Response::HTTP_FAILED_DEPENDENCY, "Lender can't fund this loan anymore");
             }
 
@@ -191,7 +189,9 @@ class LoanController extends Controller
 
             $loanOffer = $this->loanRepository->getOffer($offerId);
 
-            //check if offer is accepted
+            if ($loanOffer->accepted()->count() > 0 ) {
+                return $this->error(Response::HTTP_FORBIDDEN, "You can not decline an offer you previously accepted", $loanOffer->accepted());
+            }
 
             $this->loanRepository->declineOffer($offerId);
 

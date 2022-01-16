@@ -21,7 +21,7 @@ class UserCreatedListener
     public function __construct(WalletRepositoryInterface $walletRepository, UserRepositoryInterface $userRepository)
     {
         $this->walletRepository =  $walletRepository;
-        $this->$userRepository = $userRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
