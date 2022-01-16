@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Repositories\Contracts\LoanRepositoryInterface;
 use App\Repositories\Contracts\WalletRepositoryInterface;
 use App\Traits\ApiResponse;
-use App\Traits\UserValidation;
+use App\Traits\UserAuthorization;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -20,7 +19,7 @@ use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
 class LoanController extends Controller
 {
-    use ApiResponse, UserValidation;
+    use UserAuthorization;
 
     private $loanRepository;
 

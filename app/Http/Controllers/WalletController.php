@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\Contracts\WalletRepositoryInterface;
+use App\Traits\UserAuthorization;
 use Exception;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Response;
@@ -15,6 +17,8 @@ use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
 class WalletController extends Controller
 {
+    use UserAuthorization;
+
     private $walletRepository;
 
     public function __construct(WalletRepositoryInterface $walletRepository)
@@ -65,12 +69,17 @@ class WalletController extends Controller
     public function topUp(Request $request)
     {
         try {
+
+            $this->validateUserIsLender(); //because only lender can top up 
+
             $this->validate($request, ['amount' => 'required|min:1|max:1000000']);
 
             $wallet = $this->walletRepository->create(Auth::id());
             $wallet = $this->walletRepository->adjustWalletBalance($wallet, $request->get('amount'));
 
             return $this->response(Response::HTTP_CREATED, __('messages.record-updated'), $wallet);
+        } catch (AuthorizationException $e) {
+            return $this->error(Response::HTTP_FORBIDDEN, $e->getMessage());
         } catch (ValidationException $err) {
             return $this->validationError($err->errors());
         } catch (Exception $err) {

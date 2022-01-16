@@ -4,13 +4,9 @@ namespace App\Traits;
 
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 
-trait UserValidation
+trait UserAuthorization
 {
     use ApiResponse;
 

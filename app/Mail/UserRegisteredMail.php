@@ -25,7 +25,7 @@ class UserRegisteredMail extends Mailable
      */
     public function __construct($to, $username, $link)
     {
-        $this->to = $to;
+        $this->mailTo = $to;
         $this->link = $link;
         $this->username = $username;
 
@@ -42,7 +42,7 @@ class UserRegisteredMail extends Mailable
     public function build()
     {
         return $this->from("support@54gene.com", "54Gene")
-            ->to("Benson@gmail.com")
+            ->to($this->mailTo)
             ->subject("Welcome to 54 gene")
             ->view('mails.user_registered');
     }

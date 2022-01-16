@@ -3,10 +3,12 @@
 namespace App\Listeners;
 
 use App\Events\UserCreatedEvent;
+use App\Mail\UserRegisteredMail;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\Contracts\WalletRepositoryInterface;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class UserCreatedListener
 {
@@ -32,10 +34,12 @@ class UserCreatedListener
      */
     public function handle(UserCreatedEvent $event)
     {
-        $this->walletRepository->create($event->user->id);
+        $user = $event->user; 
+
+        $this->walletRepository->create($user->id);
         
-        $verification = $this->userRepository->createUserVerificationLink($event->user);
-        // Mail::queue(new UserRegisteredMail($user->email, $user->first_name, env('APP_URL') . "/user/$verification->user_id/confirm/$verification->verification_hash"));
+        $verification = $this->userRepository->createUserVerificationLink($user);
+        Mail::queue(new UserRegisteredMail($user->email, $user->first_name, env('APP_URL') . "/api/users/$verification->user_id/confirm/$verification->verification_hash"));
 
     }
 

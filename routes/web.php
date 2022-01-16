@@ -2,9 +2,11 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use App\Mail\UserRegisteredMail;
 use App\Models\LoanRequest;
 use App\Models\User;
 use App\Repositories\WalletRepository;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,14 +19,6 @@ use App\Repositories\WalletRepository;
 |
 */
 
-$router->get('check/{id}', function ($id){
-    $user = User::findOrFail($id); 
-    $user->account_type = User::BORROWER; 
-    $user->save();
-    return $user;
-    // $loan = LoanRequest::with('acceptedOffers')->findOrFail($id); 
-    // return $loan;
-});
 
 $router->group(['prefix' => 'api'], function () use ($router) {
 
