@@ -54,4 +54,8 @@ class User extends BaseModel implements AuthenticatableContract, AuthorizableCon
     {
         return [];
     }
+
+    public function wallet(){
+        return $this->hasOne(\App\Models\Wallet::class, 'user_id');
+    }
 }

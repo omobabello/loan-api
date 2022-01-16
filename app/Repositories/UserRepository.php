@@ -38,20 +38,6 @@ class UserRepository implements UserRepositoryInterface
         return $verification;
     }
 
-    public function confirmUser($userId, $hash)
-    {
-        $user = User::findOrFail($userId);
-        $verification = UserVerification::where('verification_hash', $hash)->firstOrFail();
-        if (strtotime('now') > strtotime($verification->expiry)) {
-            abort(Response::HTTP_NOT_FOUND);
-        }
-        $user->email_confirmed = true;
-        $user->save();
-        $verification->status = true;
-        $verification->save();
-        return true;
-    }
-
     public function login(Request $request)
     {
         $token = Auth::attempt($request->only('email', 'password'));
@@ -67,5 +53,29 @@ class UserRepository implements UserRepositoryInterface
             'token_type' => 'bearer',
             'expires_in' => Auth::factory()->getTTL() * 60
         ];
+    }
+
+    public function confirmUser($userId, $hash)
+    {
+        $user = User::findOrFail($userId);
+        $verification = UserVerification::where('verification_hash', $hash)->firstOrFail();
+        if (strtotime('now') > strtotime($verification->expiry)) {
+            abort(Response::HTTP_NOT_FOUND);
+        }
+        $user->email_confirmed = true;
+        $user->save();
+        $verification->status = true;
+        $verification->save();
+        return true;
+    }
+
+    public function getUsers()
+    {
+        return User::simplePaginate(10);
+    }
+
+    public function getUser($userId)
+    {
+        return User::with('wallet')->findOrFail($userId);
     }
 }

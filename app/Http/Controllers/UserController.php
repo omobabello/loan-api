@@ -25,6 +25,30 @@ class UserController extends Controller
         $this->userRepository = $userRepository;
     }
 
+    public function index(Request $request)
+    {
+        try {
+            $users = $this->userRepository->getUsers();
+            return $this->response(Response::HTTP_OK, __('messages.records-fetched'), $users);
+        } catch (Exception $e) {
+            Log::error($e->getMessage(), $e->getTrace());
+            return $this->serverError();
+        }
+    }
+
+    public function show(Request $request, $id)
+    {
+        try {
+            $user = $this->userRepository->getUser($id);
+            return $this->response(Response::HTTP_OK, __('messages.record-fetched'), $user);
+        } catch (NotFoundResourceException | ModelNotFoundException $err) {
+            return $this->error(Response::HTTP_NOT_FOUND, __('messages.resource-not-found'));
+        } catch (Exception $e) {
+            Log::error($e->getMessage(), $e->getTrace());
+            return $this->serverError();
+        }
+    }
+
     public function login(Request $request)
     {
         try {

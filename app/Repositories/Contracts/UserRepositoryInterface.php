@@ -11,6 +11,10 @@ interface UserRepositoryInterface
 
     public function login(Request $request);
 
+    public function getUsers();
+
+    public function getUser($userId);
+
     public function createUserVerificationLink(User $user);
 
     public function confirmUser($userId, $hash);

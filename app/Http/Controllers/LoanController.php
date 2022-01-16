@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\Contracts\LoanRepositoryInterface;
+use App\Repositories\Contracts\WalletRepositoryInterface;
 use App\Traits\ApiResponse;
 use App\Traits\UserValidation;
 use Exception;
@@ -11,6 +12,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
@@ -135,14 +137,33 @@ class LoanController extends Controller
 
             $loanOffer = $this->loanRepository->getOffer($offerId);
 
-            $this->loanRepository->acceptOffer($offerId);
+            //check if offer is declined
+
+            DB::beginTransaction();
+
+            // $this->loanRepository->acceptOffer($offerId);
+
+            $walletRepository = app(WalletRepositoryInterface::class);
+
+            $borrowerWallet = $walletRepository->get($loanOffer->request->user_id); 
+            $lenderWallet = $walletRepository->get($loanOffer->user_id);
+
+            $walletRepository->topUp($borrowerWallet, $loanOffer->request->amount);
+            $walletRepository->debit($lenderWallet, $loanOffer->request->amount);
+
+            // $walletRepository->topUp();
+            // $this->
 
             return $this->response(Response::HTTP_OK, __('messages.record-updated'), $loanOffer);
+
+            DB::commit();
         } catch (ValidationException $err) {
             return $this->validationError($err->errors());
         } catch (NotFoundResourceException | ModelNotFoundException $err) {
+            DB::rollBack();
             return $this->error(Response::HTTP_NOT_FOUND, __('messages.resource-not-found'));
         } catch (Exception $e) {
+            DB::rollBack();
             Log::error($e->getMessage(), $e->getTrace());
             return $this->serverError();
         }
@@ -155,6 +176,8 @@ class LoanController extends Controller
             $this->validateUserIsBorrower();
 
             $loanOffer = $this->loanRepository->getOffer($offerId);
+
+            //check if offer is accepted
 
             $this->loanRepository->declineOffer($offerId);
 
