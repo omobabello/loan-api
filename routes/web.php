@@ -2,12 +2,6 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
-use App\Mail\UserRegisteredMail;
-use App\Models\LoanRequest;
-use App\Models\User;
-use App\Repositories\WalletRepository;
-use Illuminate\Support\Facades\Mail;
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
