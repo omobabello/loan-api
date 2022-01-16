@@ -13,7 +13,6 @@
 |
 */
 
-
 $router->group(['prefix' => 'api'], function () use ($router) {
 
     $router->group(['middleware' => 'throttle:5'], function () use ($router) {
