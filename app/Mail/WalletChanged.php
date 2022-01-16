@@ -9,7 +9,7 @@ use Illuminate\Queue\SerializesModels;
 
 class WalletChanged extends Mailable
 {
-    use Queueable, SerializesModels;
+    // use Queueable, SerializesModels;
 
     protected $mailTo;
 

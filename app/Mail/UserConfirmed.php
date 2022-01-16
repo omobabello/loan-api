@@ -7,9 +7,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class UserConfirmed extends Mailable
+class UserConfirmed extends BaseMailable
 {
-    use Queueable, SerializesModels;
+    // use Queueable, SerializesModels
 
     public $username;
 

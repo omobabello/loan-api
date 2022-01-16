@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 
 class UserRegisteredMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    // use Queueable, SerializesModels;
 
     public $link;
 
