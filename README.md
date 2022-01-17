@@ -17,4 +17,4 @@ A basic loan API with the following functionalities:
 # Build. 
 
 - You can run `php artisan serve` 
-_ You can also use the docker command `docker-compose up --build`
+- You can also use the docker command `docker-compose up --build`
