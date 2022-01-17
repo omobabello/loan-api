@@ -8,3 +8,13 @@ A basic loan API with the following functionalities:
 - A borrower can request a loan.
 - A lender can view all requests and accept to offer a loan to a borrower.
 - A borrower can accept or decline a loan from a lender. If the loan is accepted, the borrower's wallet is credited.
+
+
+# Reference. 
+
+- For documentation, please refer to the /references folder 
+
+# Build. 
+
+- You can run `php artisan serve` 
+_ You can also use the docker command `docker-compose up --build`
