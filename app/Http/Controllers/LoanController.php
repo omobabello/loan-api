@@ -148,8 +148,6 @@ class LoanController extends Controller
 
             $loanRequest = $loanOffer->request()->first(); 
 
-            Log::info($loanRequest);
-
             if ($loanOffer->accepted()->count() > 0 || $loanRequest->acceptedOffers()->count() > 0) {
                 return $this->error(Response::HTTP_FORBIDDEN, "This request has been previously accepted", $loanOffer->accepted());
             }
