@@ -1,0 +1,341 @@
+openapi: 3.1.0
+info:
+  title: wallets
+  version: '1.0'
+servers:
+  - url: 'http://localhost:8000'
+paths:
+  /api/wallets:
+    post:
+      summary: ''
+      operationId: post-api-wallets
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  message:
+                    type: string
+                    minLength: 1
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        minLength: 1
+                      user_id:
+                        type: string
+                        minLength: 1
+                      balance:
+                        type: number
+                      created_at:
+                        type: string
+                        minLength: 1
+                      updated_at:
+                        type: string
+                        minLength: 1
+                    required:
+                      - id
+                      - user_id
+                      - balance
+                      - created_at
+                      - updated_at
+                required:
+                  - message
+                  - data
+                x-examples:
+                  example-1:
+                    message: string
+                    data:
+                      id: string
+                      user_id: string
+                      balance: 0
+                      created_at: string
+                      updated_at: string
+      description: Top up user wallet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              x-examples:
+                example-1:
+                  initial_balance: '0'
+              properties:
+                initial_balance:
+                  type: string
+                  minLength: 1
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Authorization
+    get:
+      summary: ''
+      operationId: get-api-wallets
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  message:
+                    type: string
+                    minLength: 1
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        minLength: 1
+                      user_id:
+                        type: string
+                        minLength: 1
+                      balance:
+                        type: number
+                      created_at:
+                        type: string
+                        minLength: 1
+                      updated_at:
+                        type: string
+                        minLength: 1
+                    required:
+                      - id
+                      - user_id
+                      - balance
+                      - created_at
+                      - updated_at
+                required:
+                  - message
+                  - data
+                x-examples:
+                  example-1:
+                    message: string
+                    data:
+                      id: string
+                      user_id: string
+                      balance: 0
+                      created_at: string
+                      updated_at: string
+      description: Get a user wallet
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Authorization
+  /api/wallets/topup:
+    parameters: []
+    post:
+      summary: ''
+      operationId: post-api-wallets-topup
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  message:
+                    type: string
+                    minLength: 1
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        minLength: 1
+                      user_id:
+                        type: string
+                        minLength: 1
+                      balance:
+                        type: number
+                      created_at:
+                        type: string
+                        minLength: 1
+                      updated_at:
+                        type: string
+                        minLength: 1
+                    required:
+                      - id
+                      - user_id
+                      - balance
+                      - created_at
+                      - updated_at
+                required:
+                  - message
+                  - data
+                x-examples:
+                  example-1:
+                    message: Record Updated successfully
+                    data:
+                      id: 3d915002-06aa-4de1-9096-26584e435cd3
+                      user_id: fd535e93-0b0b-4f06-83b7-635ad3a6846c
+                      balance: 50000
+                      created_at: '2022-01-16T11:33:19.000000Z'
+                      updated_at: '2022-01-16T13:12:00.000000Z'
+              examples:
+                example-1:
+                  value:
+                    message: string
+                    data:
+                      id: string
+                      user_id: string
+                      balance: 0
+                      created_at: string
+                      updated_at: string
+      description: Use this endpoint to create user wallet
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Authorization
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+  /api/wallets/withdraw:
+    post:
+      summary: ''
+      operationId: post-api-wallets-withdraw
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  message:
+                    type: string
+                    minLength: 1
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        minLength: 1
+                      user_id:
+                        type: string
+                        minLength: 1
+                      balance:
+                        type: number
+                      created_at:
+                        type: string
+                        minLength: 1
+                      updated_at:
+                        type: string
+                        minLength: 1
+                    required:
+                      - id
+                      - user_id
+                      - balance
+                      - created_at
+                      - updated_at
+                required:
+                  - message
+                  - data
+                x-examples:
+                  example-1:
+                    message: Record Updated successfully
+                    data:
+                      id: 3d915002-06aa-4de1-9096-26584e435cd3
+                      user_id: fd535e93-0b0b-4f06-83b7-635ad3a6846c
+                      balance: 50000
+                      created_at: '2022-01-16T11:33:19.000000Z'
+                      updated_at: '2022-01-16T13:12:00.000000Z'
+      description: Use this endpoint to withdraw from wallet
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Authorization
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              properties:
+                amount:
+                  type: string
+                  minLength: 1
+              required:
+                - amount
+              x-examples:
+                example-1:
+                  amount: '15000'
+  /api/wallets/activities:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+      operationId: get-api-wallets-activities
+      description: Get activites of a user wallet.
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: Authorization
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+components:
+  schemas:
+    User:
+      title: User
+      type: object
+      description: ''
+      examples:
+        - id: 142
+          firstName: Alice
+          lastName: Smith
+          email: alice.smith@gmail.com
+          dateOfBirth: '1997-10-31'
+          emailVerified: true
+          signUpDate: '2019-08-24'
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the given user.
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        dateOfBirth:
+          type: string
+          format: date
+          example: '1997-10-31'
+        emailVerified:
+          type: boolean
+          description: Set to true if the user's email has been verified.
+        createDate:
+          type: string
+          format: date
+          description: The date that the user was created.
+      required:
+        - id
+        - firstName
+        - lastName
+        - email
+        - emailVerified

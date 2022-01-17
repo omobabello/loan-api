@@ -1,0 +1,587 @@
+openapi: 3.1.0
+info:
+  title: Loan-app-api
+  version: '1.0'
+servers:
+  - url: 'http://localhost:8000'
+paths:
+  '/api/users/{userId}':
+    parameters:
+      - schema:
+          type: integer
+        name: userId
+        in: path
+        required: true
+        description: Id of an existing user.
+    get:
+      summary: Get User Info by User ID
+      tags: []
+      responses:
+        '200':
+          description: User Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                Get User Alice Smith:
+                  value:
+                    id: 142
+                    firstName: Alice
+                    lastName: Smith
+                    email: alice.smith@gmail.com
+                    dateOfBirth: '1997-10-31'
+                    emailVerified: true
+                    signUpDate: '2019-08-24'
+        '404':
+          description: User Not Found
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  message:
+                    type: string
+                    minLength: 1
+                  errors: {}
+                required:
+                  - message
+                x-examples:
+                  example-1:
+                    message: Resource not found
+                    errors: null
+        '':
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  message:
+                    type: string
+                    minLength: 1
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        minLength: 1
+                      first_name:
+                        type: string
+                        minLength: 1
+                      last_name:
+                        type: string
+                        minLength: 1
+                      email:
+                        type: string
+                        minLength: 1
+                      phone:
+                        type: string
+                        minLength: 1
+                      address:
+                        type: string
+                        minLength: 1
+                      remember_token: {}
+                      email_confirmed:
+                        type: number
+                      account_type:
+                        type: string
+                        minLength: 1
+                      created_at:
+                        type: string
+                        minLength: 1
+                      updated_at:
+                        type: string
+                        minLength: 1
+                      wallet:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            minLength: 1
+                          user_id:
+                            type: string
+                            minLength: 1
+                          balance:
+                            type: number
+                          created_at:
+                            type: string
+                            minLength: 1
+                          updated_at:
+                            type: string
+                            minLength: 1
+                        required:
+                          - id
+                          - user_id
+                          - balance
+                          - created_at
+                          - updated_at
+                    required:
+                      - id
+                      - first_name
+                      - last_name
+                      - email
+                      - phone
+                      - address
+                      - email_confirmed
+                      - account_type
+                      - created_at
+                      - updated_at
+                      - wallet
+                required:
+                  - message
+                  - data
+                x-examples:
+                  example-1:
+                    message: Record fetched successfully
+                    data:
+                      id: 12b1b25b-cd1a-4b55-9d93-aae1ee89d06b
+                      first_name: borrow
+                      last_name: again
+                      email: borrowagain@mail.com
+                      phone: '081171234523'
+                      address: Just in this is your doom
+                      remember_token: null
+                      email_confirmed: 0
+                      account_type: borrower
+                      created_at: '2022-01-16T11:34:02.000000Z'
+                      updated_at: '2022-01-16T11:40:17.000000Z'
+                      wallet:
+                        id: f6d928c2-5607-4e15-ad29-389cfca377b8
+                        user_id: 12b1b25b-cd1a-4b55-9d93-aae1ee89d06b
+                        balance: 0
+                        created_at: '2022-01-16T11:34:02.000000Z'
+                        updated_at: '2022-01-16T11:34:02.000000Z'
+      operationId: get-users-userId
+      description: Retrieve the information of the user with the matching user ID.
+  /api/users:
+    post:
+      summary: Create New User
+      operationId: post-user
+      responses:
+        '200':
+          description: User Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                New User Bob Fellow:
+                  value:
+                    id: 12
+                    firstName: Bob
+                    lastName: Fellow
+                    email: bob.fellow@gmail.com
+                    dateOfBirth: '1996-08-24'
+                    emailVerified: false
+                    createDate: '2020-11-18'
+        '400':
+          description: Missing Required Information
+        '409':
+          description: Email Already Taken
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                dateOfBirth:
+                  type: string
+                  format: date
+              required:
+                - firstName
+                - lastName
+                - email
+                - dateOfBirth
+            examples:
+              Create User Bob Fellow:
+                value:
+                  firstName: Bob
+                  lastName: Fellow
+                  email: bob.fellow@gmail.com
+                  dateOfBirth: '1996-08-24'
+        description: Post the necessary fields for the API to create a new user.
+      description: Create a new user.
+    parameters: []
+    get:
+      summary: ''
+      operationId: get-users
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  message:
+                    type: string
+                    minLength: 1
+                  data:
+                    type: object
+                    properties:
+                      current_page:
+                        type: number
+                      data:
+                        type: array
+                        uniqueItems: true
+                        minItems: 1
+                        items:
+                          required:
+                            - id
+                            - first_name
+                            - last_name
+                            - email
+                            - phone
+                            - address
+                            - email_confirmed
+                            - account_type
+                            - created_at
+                            - updated_at
+                          properties:
+                            id:
+                              type: string
+                              minLength: 1
+                            first_name:
+                              type: string
+                              minLength: 1
+                            last_name:
+                              type: string
+                              minLength: 1
+                            email:
+                              type: string
+                              minLength: 1
+                            phone:
+                              type: string
+                              minLength: 1
+                            address:
+                              type: string
+                              minLength: 1
+                            remember_token: {}
+                            email_confirmed:
+                              type: number
+                            account_type:
+                              type: string
+                              minLength: 1
+                            created_at:
+                              type: string
+                              minLength: 1
+                            updated_at:
+                              type: string
+                              minLength: 1
+                      first_page_url:
+                        type: string
+                        minLength: 1
+                      from:
+                        type: number
+                      next_page_url: {}
+                      path:
+                        type: string
+                        minLength: 1
+                      per_page:
+                        type: number
+                      prev_page_url: {}
+                      to:
+                        type: number
+                    required:
+                      - current_page
+                      - data
+                      - first_page_url
+                      - from
+                      - path
+                      - per_page
+                      - to
+                required:
+                  - message
+                  - data
+                x-examples:
+                  example-1:
+                    message: Records fetched successfully
+                    data:
+                      current_page: 1
+                      data:
+                        - id: 12b1b25b-cd1a-4b55-9d93-aae1ee89d06b
+                          first_name: borrow
+                          last_name: again
+                          email: borrowagain@mail.com
+                          phone: '081171234523'
+                          address: Just in this is your doom
+                          remember_token: null
+                          email_confirmed: 0
+                          account_type: borrower
+                          created_at: '2022-01-16T11:34:02.000000Z'
+                          updated_at: '2022-01-16T11:40:17.000000Z'
+                        - id: 4409fb72-511b-4f38-ad40-be145b8ea5cc
+                          first_name: Chidi
+                          last_name: Ngene
+                          email: chidi@mail.com
+                          phone: '081171234553'
+                          address: Just in this is your doom
+                          remember_token: null
+                          email_confirmed: 1
+                          account_type: lender
+                          created_at: '2022-01-16T12:38:45.000000Z'
+                          updated_at: '2022-01-16T12:54:48.000000Z'
+                        - id: 7d6e81b4-9551-438a-af7f-d0f29847e3b7
+                          first_name: borrow
+                          last_name: bello
+                          email: borrow@mail.com
+                          phone: '081571234523'
+                          address: Just in this is your doom
+                          remember_token: null
+                          email_confirmed: 0
+                          account_type: borrower
+                          created_at: '2022-01-16T11:33:40.000000Z'
+                          updated_at: '2022-01-16T11:40:50.000000Z'
+                        - id: b3c4a9f5-b7c1-4685-93b8-db1963b39787
+                          first_name: Chidi
+                          last_name: Ngene
+                          email: chidi+55@mail.com
+                          phone: '081171234559'
+                          address: Just in this is your doom
+                          remember_token: null
+                          email_confirmed: 0
+                          account_type: lender
+                          created_at: '2022-01-16T16:46:20.000000Z'
+                          updated_at: '2022-01-16T16:46:20.000000Z'
+                        - id: f9a269a2-d5b6-4d95-a546-8b59426cf4bc
+                          first_name: lenderer
+                          last_name: bello
+                          email: lenderer@mail.com
+                          phone: '081571234563'
+                          address: Just in this is your doom
+                          remember_token: null
+                          email_confirmed: 0
+                          account_type: lender
+                          created_at: '2022-01-16T11:31:29.000000Z'
+                          updated_at: '2022-01-16T11:31:29.000000Z'
+                        - id: fd535e93-0b0b-4f06-83b7-635ad3a6846c
+                          first_name: lender
+                          last_name: bello
+                          email: lender@mail.com
+                          phone: '081571234565'
+                          address: Just in this is your doom
+                          remember_token: null
+                          email_confirmed: 0
+                          account_type: lender
+                          created_at: '2022-01-16T11:33:19.000000Z'
+                          updated_at: '2022-01-16T11:33:19.000000Z'
+                      first_page_url: 'http://localhost:8000/api/users?page=1'
+                      from: 1
+                      next_page_url: null
+                      path: 'http://localhost:8000/api/users'
+                      per_page: 10
+                      prev_page_url: null
+                      to: 6
+      description: Use this endpoint to get the list of users
+  '/api/users/{id}/confirm/{hash}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+      - schema:
+          type: string
+        name: hash
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  message:
+                    type: string
+                    minLength: 1
+                  data:
+                    type: boolean
+                required:
+                  - message
+                  - data
+                x-examples:
+                  example-1:
+                    message: Record created successfully
+                    data: true
+      operationId: get-api-users-id-confirm-hash
+      description: Use this endpoint to confirm email of a user
+  /api/login:
+    post:
+      summary: ''
+      operationId: post-api-login
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  message:
+                    type: string
+                    minLength: 1
+                  data:
+                    type: object
+                    properties:
+                      user:
+                        type: object
+                        properties:
+                          id:
+                            type: string
+                            minLength: 1
+                          first_name:
+                            type: string
+                            minLength: 1
+                          last_name:
+                            type: string
+                            minLength: 1
+                          email:
+                            type: string
+                            minLength: 1
+                          phone:
+                            type: string
+                            minLength: 1
+                          address:
+                            type: string
+                            minLength: 1
+                          remember_token: {}
+                          email_confirmed:
+                            type: number
+                          account_type:
+                            type: string
+                            minLength: 1
+                          created_at:
+                            type: string
+                            minLength: 1
+                          updated_at:
+                            type: string
+                            minLength: 1
+                        required:
+                          - id
+                          - first_name
+                          - last_name
+                          - email
+                          - phone
+                          - address
+                          - email_confirmed
+                          - account_type
+                          - created_at
+                          - updated_at
+                      token:
+                        type: string
+                        minLength: 1
+                      token_type:
+                        type: string
+                        minLength: 1
+                      expires_in:
+                        type: number
+                    required:
+                      - user
+                      - token
+                      - token_type
+                      - expires_in
+                required:
+                  - message
+                  - data
+                x-examples:
+                  example-1:
+                    message: User successfully signed in
+                    data:
+                      user:
+                        id: fd535e93-0b0b-4f06-83b7-635ad3a6846c
+                        first_name: lender
+                        last_name: bello
+                        email: lender@mail.com
+                        phone: '081571234565'
+                        address: Just in this is your doom
+                        remember_token: null
+                        email_confirmed: 0
+                        account_type: lender
+                        created_at: '2022-01-16T11:33:19.000000Z'
+                        updated_at: '2022-01-16T11:33:19.000000Z'
+                      token: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvYXBpXC9sb2dpbiIsImlhdCI6MTY0MjMzODU4MywiZXhwIjoxNjQyMzQyMTgzLCJuYmYiOjE2NDIzMzg1ODMsImp0aSI6ImlVcGlxb3dQaEpLQnBndlEiLCJzdWIiOiJmZDUzNWU5My0wYjBiLTRmMDYtODNiNy02MzVhZDNhNjg0NmMiLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.a-iHb3CT-BveKMLAfbKs4pn1F_0M_VzWdrSuiUxE-1k
+                      token_type: bearer
+                      expires_in: 3600
+      description: Use this endpoint to login a user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: ''
+              type: object
+              x-examples:
+                example-1:
+                  email: ''
+                  password: ''
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - password
+  /api/logout:
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses: {}
+      operationId: get-api-logout
+      description: Logout of session
+components:
+  schemas:
+    User:
+      title: User
+      type: object
+      description: ''
+      examples:
+        - id: 142
+          firstName: Alice
+          lastName: Smith
+          email: alice.smith@gmail.com
+          dateOfBirth: '1997-10-31'
+          emailVerified: true
+          signUpDate: '2019-08-24'
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the given user.
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        dateOfBirth:
+          type: string
+          format: date
+          example: '1997-10-31'
+        emailVerified:
+          type: boolean
+          description: Set to true if the user's email has been verified.
+        createDate:
+          type: string
+          format: date
+          description: The date that the user was created.
+      required:
+        - id
+        - firstName
+        - lastName
+        - email
+        - emailVerified
