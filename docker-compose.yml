@@ -16,7 +16,7 @@ services:
         DB_DATABASE: loan_app
         DB_USERNAME: root
         DB_PASSWORD: root
-        MAIL_MAILE: smtp
+        MAIL_MAILER: smtp
         MAIL_HOST: smtp.mailtrap.io
         MAIL_PORT: 2525
         MAIL_USERNAME: 7f621af7d2ae4f
